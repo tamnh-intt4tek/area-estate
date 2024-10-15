@@ -1,0 +1,67 @@
+<odoo>
+    <!-- Tạo nhóm Public: chỉ được phép chỉnh sửa quyền public -->
+    <data noupdate="0">
+        <record id="module_category_custom_groups" model="ir.module.category">
+            <field name="name">Areas Category</field>
+        </record>
+
+        <record id="sub_module_category_custom_groups" model="ir.module.category">
+            <field name="name">Areas Permission</field>
+        </record>
+
+        <!-- Nhóm Public chỉ có quyền chỉnh sửa thuộc tính public -->
+        <record id="group_areas_public" model="res.groups">
+            <field name="name">Areas Public</field>
+            <field name="category_id" ref="sub_module_category_custom_groups"/>
+        </record>
+
+        <!-- Nhóm Edit có quyền thêm, sửa, xóa nhưng không được public -->
+        <record id="group_areas_edit" model="res.groups">
+            <field name="name">Areas Edit</field>
+            <field name="category_id" ref="sub_module_category_custom_groups"/>
+        </record>
+
+        <!-- Nhóm View chỉ có quyền xem -->
+        <record id="group_areas_view" model="res.groups">
+            <field name="name">Areas View</field>
+            <field name="category_id" ref="sub_module_category_custom_groups"/>
+        </record>
+    </data>
+
+    <!-- Phân quyền cho mô hình Areas -->
+    <data noupdate="1">
+        <!-- Quyền Public -->
+        <record id="areas_comp_rule_public" model="ir.rule">
+            <field name="name">Areas Public</field>
+            <field name="model_id" ref="areas_in_country.model_areas_area"/>
+            <field name="groups" eval="[(4, ref('areas_in_country.group_areas_public'))]"/>
+            <field name="domain_force">[('id', '!=', False)]</field> <!-- Nhóm này chỉ có quyền thay đổi thuộc tính is_public -->
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Quyền Edit -->
+        <record id="areas_comp_rule_edit" model="ir.rule">
+            <field name="name">Areas Edit</field>
+            <field name="model_id" ref="areas_in_country.model_areas_area"/>
+            <field name="groups" eval="[(4, ref('areas_in_country.group_areas_edit'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Quyền View -->
+        <record id="areas_comp_rule_view" model="ir.rule">
+            <field name="name">Areas View Only</field>
+            <field name="model_id" ref="areas_in_country.model_areas_area"/>
+            <field name="groups" eval="[(4, ref('areas_in_country.group_areas_view'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+    </data>
+</odoo>
